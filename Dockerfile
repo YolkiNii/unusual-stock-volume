@@ -10,7 +10,7 @@ RUN apk add py3-pip
 RUN apk add --update npm
 
 # Setup a directory for project copy
-WORKDIR /tmp/unusual-stock-volume
+WORKDIR /unusual-stock-volume
 
 # Copy project over
 COPY . .
