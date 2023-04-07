@@ -1,16 +1,16 @@
-# Import latest python image
-FROM python:latest
+# Start with latest ubuntu image
+FROM alpine:latest
 
-# Set working directory to the project base
+# Switch to root user for root privilege
+USER root
+
+# Install necessary packages for a python and node environment
+RUN apk add python3
+RUN apk add py3-pip
+RUN apk add --update npm
+
+# Setup a directory for project copy
 WORKDIR /unusual-stock-volume
 
-# Copy required imports from project requirements file
-COPY requirements.txt requirements.txt
-
-# Import required dependencies
-RUN pip3 install -r requirements.txt
-
-# Copy the project files to the image
+# Copy project over
 COPY . .
-
-CMD ["ls"]

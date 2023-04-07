@@ -1,0 +1,9 @@
+services:
+  tests-python:
+    build: .
+    command:
+      - /bin/sh
+      - -c
+      - |
+        pip3 install --ignore-installed -r requirements.txt
+        pytest tests/

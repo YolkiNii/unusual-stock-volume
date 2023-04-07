@@ -8,14 +8,14 @@ pipeline {
     pollSCM "*/5 * * * *"
   }
   stages {
-    stage("Build") {
+    stage("Build Python") {
       steps {
-        echo "In Build stage"
+        sh "pip3 install --ignore-installed -r requirements.txt"
       }
     }
-    stage("Test") {
+    stage("Test Python") {
       steps {
-        echo "In Test stage"
+        sh "python -m pytest tests/"
       }
     }
   }
