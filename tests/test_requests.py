@@ -1,8 +1,8 @@
-import app.requests.tickers_requests as tickers_requests
+import app.ticker_requests as ticker_requests
 
 class TestRequests:
   def test_get_all_tickers(self):
-    tickers = tickers_requests.get_all_tickers()
+    tickers = ticker_requests.get_all_tickers()
 
     # Assert that we have tickers
     assert len(tickers) > 0

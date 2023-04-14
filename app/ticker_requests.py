@@ -5,7 +5,7 @@ def get_all_tickers():
   current_dir = os.path.dirname(__file__)
 
   # Read from all_tickers file
-  with open(os.path.join(current_dir, "../data/all_tickers.txt")) as f:
+  with open(os.path.join(current_dir, "./data/all_tickers.txt")) as f:
     raw_all_tickers = f.read()
     all_tickers = raw_all_tickers.split("\n")
 
