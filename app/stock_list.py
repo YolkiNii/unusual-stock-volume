@@ -16,7 +16,7 @@ ALPACA_SECRET = os.getenv("ALPACA_SECRET")
 
 class StockList:
   US_BUISNESS_DAY = CustomBusinessDay(calendar=USFederalHolidayCalendar())
-  MARKET_SESSION_END_TIME = datetime.time(20, 20, 0)
+  MARKET_SESSION_END_TIME = datetime.time(20, 20, 0, tzinfo=pytz.timezone("US/Eastern"))
   ALPACA_STOCK_CLIENT = StockHistoricalDataClient(ALPACA_API_KEY, ALPACA_SECRET)
 
   def __init__(self):
@@ -58,7 +58,7 @@ class StockList:
     if (today != pd.Timestamp(today - 0 * self.US_BUISNESS_DAY) or \
         today.time() < self.MARKET_SESSION_END_TIME):
       return datetime.datetime.combine((today - 1 * self.US_BUISNESS_DAY).date(), \
-                                        datetime.time(23, 59, 59), \
+                                        datetime.time(20, 20, 0), \
                                         pytz.timezone("US/Eastern"))
     
     return today
