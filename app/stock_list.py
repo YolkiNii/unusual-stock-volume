@@ -2,6 +2,7 @@ import os
 import datetime
 import pytz
 import pandas as pd
+import numpy as np
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from pandas.tseries.offsets import CustomBusinessDay
 from dotenv import load_dotenv
@@ -20,7 +21,35 @@ class StockList:
   ALPACA_STOCK_CLIENT = StockHistoricalDataClient(ALPACA_API_KEY, ALPACA_SECRET)
 
   def __init__(self):
-    self.bars_df = self.request_all_30_day_history_bars()
+    pass
+
+  def extract_unusual_bars(self):
+    bars_df = self.request_all_30_day_history_bars()
+
+    # Get the date of 7 days ago from today
+    today = self.get_end_date()
+    week_ago = self.get_n_business_days_before(today, 7)
+
+    # Get all symbols available from request
+    symbols = bars_df.index.get_level_values("symbol").unique().to_list()
+
+    # Go through each symbols' bars. Find and append each high volume outstanding bars
+    unusual_bars_df = pd.DataFrame()
+
+    for symbol in symbols:
+      # Extract symbol specific bars
+      symbol_bars_df = bars_df.loc[[symbol]]
+
+      mean = symbol_bars_df["volume"].mean()
+      std = np.std(symbol_bars_df["volume"].to_list())
+
+      # Extract unusually high volume bars
+      symbol_week_bars_df = symbol_bars_df[symbol_bars_df.index.get_level_values("timestamp") >= week_ago]
+      symbol_unusual_bars_df = symbol_week_bars_df[symbol_week_bars_df["volume"] >= mean + (std * 3)]
+
+      unusual_bars_df = pd.concat([unusual_bars_df, symbol_unusual_bars_df])
+
+    return unusual_bars_df
 
   def request_all_30_day_history_bars(self):
     # Get list of all symbols
@@ -77,7 +106,3 @@ class StockList:
     return [ticker for ticker in all_tickers if len(ticker) < 5 or \
           (len(ticker) > 4 and ticker[-1] not in unwanted_ticker_letters)]
   
-  class Stock:
-    def __init__(self, symbol, bars):
-      self.symbol = symbol
-      self.bars = bars
